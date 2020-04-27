@@ -48,6 +48,10 @@ fun ParametrizedWithType.hiddenVariable(name: String, value: String, description
     text(name, value, "", description, ParameterDisplay.HIDDEN)
 }
 
+fun ParametrizedWithType.hiddenPasswordVariable(name: String, value: String, description: String) {
+    password(name, value, "", description, ParameterDisplay.HIDDEN)
+}
+
 fun Triggers.RunNightly(enabled: Boolean, startHour: Int) {
     schedule{
         enabled
