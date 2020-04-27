@@ -7,7 +7,7 @@ class LocationConfiguration(var primary : String, var secondary : String, var te
 }
 
 fun ParametrizedWithType.ConfigureAzureSpecificTestParameters(environment: String, config: ClientConfiguration, locationsForEnv: LocationConfiguration) {
-    hiddenPasswordVariable("env.ARM_CLIENT_ID", "credentialsJSON:88a1d063-d674-4b80-953d-148e2570bb82", "The ID of the Service Principal used for Testing")
+    hiddenPasswordVariable("env.ARM_CLIENT_ID", config.clientId, "The ID of the Service Principal used for Testing")
     hiddenPasswordVariable("env.ARM_CLIENT_SECRET", config.clientSecret, "The Client Secret of the Service Principal used for Testing")
     hiddenVariable("env.ARM_ENVIRONMENT", environment, "The Azure Environment in which the tests are running")
     hiddenVariable("env.ARM_PROVIDER_DYNAMIC_TEST", "%b".format(locationsForEnv.rotate), "Should tests rotate between the supported regions?")
