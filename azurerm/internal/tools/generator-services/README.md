@@ -5,7 +5,7 @@ Each Service Definition contains metadata (such as the Display Name & Website Ca
 This generator takes that metadata and uses it to generate two things:
 
 1. Website Categories - which validates the categories used in the website exist, required for website deployments to happen.
-2. Service Definitions - generates the list of getServices used to run the Acceptance Tests
+2. Service Definitions - generates the list of services used to run the Acceptance Tests
 
 This is run via go:generate whenever the "SupportedServices" array is changed so that this is kept up-to-date.
 

@@ -1,4 +1,4 @@
 var customParallelism = mapOf(
-        "containers" to serviceTestConfiguration(5, 5),
-        "compute" to serviceTestConfiguration(5, 4)
+        "containers" to testConfiguration(5, 5),
+        "compute" to testConfiguration(5, 4)
 )

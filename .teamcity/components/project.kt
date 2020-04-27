@@ -1,4 +1,3 @@
-import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 
 var defaultStartHour = 4
@@ -12,15 +11,9 @@ object AzureRM : Project({
     vcsRoot(providerRepository)
 
     services.forEach { serviceName, displayName ->
-        var buildConfiguration = buildConfigurationForServiceName(serviceName, displayName)
-        buildType(buildConfiguration)
+        var defaultService = testConfiguration(defaultParallelism, defaultStartHour)
+        var service = customParallelism.getOrDefault(serviceName, defaultService)
+        var buildConfig = buildConfigurationForService(serviceName, displayName, service, environment)
+        buildType(buildConfig)
     }
 })
-
-fun buildConfigurationForServiceName(serviceName : String, displayName : String) : BuildType {
-    var defaultService = serviceTestConfiguration(defaultParallelism, defaultStartHour)
-    var service = customParallelism.getOrDefault(serviceName, defaultService)
-    return buildConfigurationForService(serviceName, displayName, service, environment)
-}
-
-
