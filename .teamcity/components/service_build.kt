@@ -45,11 +45,15 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             params {
+                // text params are editable on a per-build basis
                 text("PARALLELISM", "%d".format(parallelism))
                 text("TEST_PREFIX", "TestAcc")
                 text("TIMEOUT", "12h")
-                text("env.TF_ACC", "1")
-                text("env.TF_SCHEMA_PANIC_ON_ERROR", "1")
+
+                // param's aren't editable by users
+                param("env.TF_ACC", "1")
+                param("env.TF_SCHEMA_PANIC_ON_ERROR", "1")
+                param("teamcity.ui.settings.readOnly", "true")
             }
 
             triggers {
