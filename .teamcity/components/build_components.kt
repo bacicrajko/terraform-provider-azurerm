@@ -49,7 +49,7 @@ fun ParametrizedWithType.hiddenVariable(name: String, value: String, description
 }
 
 fun Triggers.RunNightly(enabled: Boolean, startHour: Int) {
-    trigger(schedule {
+    schedule{
         enabled
         branchFilter = "+:refs/heads/master"
 
@@ -57,5 +57,5 @@ fun Triggers.RunNightly(enabled: Boolean, startHour: Int) {
             hour = startHour
             timezone = "SERVER"
         }
-    })
+    }
 }
