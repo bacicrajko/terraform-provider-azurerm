@@ -46,15 +46,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             triggers {
-                schedule {
-                    enabled = runNightly
-                    branchFilter = "+:refs/heads/master"
-
-                    schedulingPolicy = daily {
-                        hour = startHour
-                        timezone = "SERVER"
-                    }
-                }
+                RunNightly(runNightly, startHour)
             }
         }
     }

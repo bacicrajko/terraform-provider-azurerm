@@ -4,6 +4,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.ParameterDisplay
 import jetbrains.buildServer.configs.kotlin.v2019_2.ParametrizedWithType
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.GolangFeature
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.ScriptBuildStep
+import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.ScheduleTrigger
 
 // NOTE: in time this could be pulled out into a separate Kotlin package
 
@@ -42,4 +43,16 @@ fun ParametrizedWithType.TerraformShouldPanicForSchemaErrors() {
 
 fun ParametrizedWithType.hiddenVariable(name: String, value: String, description: String) {
     text(name, value, "", description, ParameterDisplay.HIDDEN)
+}
+
+fun RunNightly(enabled: Boolean, startHour: Int) : ScheduleTrigger {
+    return ScheduleTrigger {
+        enabled
+        branchFilter = "+:refs/heads/master"
+
+        schedulingPolicy = daily {
+            hour = startHour
+            timezone = "SERVER"
+        }
+    }
 }
