@@ -1,5 +1,6 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
+import jetbrains.buildServer.configs.kotlin.v2019_2.ParameterDisplay
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.golang
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
@@ -45,15 +46,13 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             params {
-                // text params are editable on a per-build basis
                 text("PARALLELISM", "%d".format(parallelism))
                 text("TEST_PREFIX", "TestAcc")
                 text("TIMEOUT", "12h")
 
-                // param's aren't editable by users
-                param("env.TF_ACC", "1")
-                param("env.TF_SCHEMA_PANIC_ON_ERROR", "1")
-                param("teamcity.ui.settings.readOnly", "true")
+                text("env.TF_ACC", "1", "", "", ParameterDisplay.HIDDEN)
+                text("env.TF_SCHEMA_PANIC_ON_ERROR", "1", "", "", ParameterDisplay.HIDDEN)
+                text("teamcity.ui.settings.readOnly", "true", "", "", ParameterDisplay.HIDDEN)
             }
 
             triggers {
