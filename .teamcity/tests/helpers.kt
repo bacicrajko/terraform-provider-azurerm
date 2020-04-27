@@ -1,19 +1,10 @@
 package tests
 
-import java.io.File
+class Service(name: String) {
+    val name = name
 
-class Value(value: String) {
-    val value = value
-
-    fun existsInFile(file: File) : Boolean {
-        var exists = false
-
-        file.forEachLine {l ->
-            if (value == l) {
-                exists = true
-            }
-        }
-
-        return exists
+    fun exists(services: Map<String, String>) : Boolean {
+        val exists = services.get(name)
+        return exists != null
     }
 }

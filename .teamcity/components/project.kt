@@ -1,25 +1,26 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
-import java.io.File
+
+var defaultStartHour = 4
+
+// this is per-package, not per-concurrent build
+var defaultParallelism = 10
+
+var environment = "public" // TODO: configurable
 
 object AzureRM : Project({
     vcsRoot(providerRepository)
 
-    var serviceNames = getServiceNames()
-    serviceNames.forEachLine { serviceName ->
-        var buildConfiguration = buildConfigurationForServiceName(serviceName)
+    services.forEach { serviceName, displayName ->
+        var buildConfiguration = buildConfigurationForServiceName(serviceName, displayName)
         buildType(buildConfiguration)
     }
 })
 
-fun buildConfigurationForServiceName(serviceName : String) : BuildType {
-    var displayName = serviceDisplayNames.getOrDefault(serviceName, serviceName.capitalize())
-    var defaultService = serviceDetails(displayName, defaultParallelism, defaultStartHour)
+fun buildConfigurationForServiceName(serviceName : String, displayName : String) : BuildType {
+    var defaultService = serviceTestConfiguration(defaultParallelism, defaultStartHour)
     var service = customParallelism.getOrDefault(serviceName, defaultService)
-    return buildConfigurationForService(serviceName, service, environment)
+    return buildConfigurationForService(serviceName, displayName, service, environment)
 }
 
-fun getServiceNames() : File {
-    return File("services.txt")
-}
 
