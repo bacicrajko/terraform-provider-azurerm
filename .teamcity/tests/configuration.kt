@@ -13,21 +13,19 @@ class ConfigurationTests {
         }
     }
 
-//    TODO: Debug/re-enable
-//    @Test
-//    fun buildShouldHaveGoTestFeature() {
-//        val project = AzureRM("public")
-//        project.buildTypes.forEach{ bt ->
-//            var exists = false
-//            bt.features.items.forEach { f ->
-//                print(f.id)
-//                if (f.type == "golang") {
-//                    exists = true
-//                }
-//            }
-//            assertTrue("Build %s doesn't have Go Test Json enabled".format(bt.name), exists)
-//        }
-//    }
+    @Test
+    fun buildShouldHaveGoTestFeature() {
+        val project = AzureRM("public", TestConfiguration())
+        project.buildTypes.forEach{ bt ->
+            var exists = false
+            bt.features.items.forEach { f ->
+                if (f.type == "golang") {
+                    exists = true
+                }
+            }
+            assertTrue("Build %s doesn't have Go Test Json enabled".format(bt.name), exists)
+        }
+    }
 
     @Test
     fun buildShouldHaveTrigger() {
