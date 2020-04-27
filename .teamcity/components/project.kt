@@ -1,19 +1,31 @@
+import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 
 fun AzureRM(environment: String) : Project {
     return Project{
         vcsRoot(providerRepository)
 
-        services.forEach { (serviceName, displayName) ->
-            var defaultTestConfig = testConfiguration(defaultParallelism, defaultStartHour)
-            var testConfig = serviceTestConfigurationOverrides.getOrDefault(serviceName, defaultTestConfig)
-            var runNightly = runNightly.getOrDefault(environment, false)
-
-            var service = serviceDetails(serviceName, displayName, environment)
-            var buildConfig = service.buildConfiguration(runNightly, testConfig.startHour, testConfig.parallelism)
-            buildType(buildConfig)
+        var buildConfigs = buildConfigurationsForServices(services, environment)
+        buildConfigs.forEach { buildConfiguration ->
+            buildType(buildConfiguration)
         }
     }
+}
+
+fun buildConfigurationsForServices(services: Map<String, String>, environment: String): List<BuildType> {
+    var list = ArrayList<BuildType>()
+
+    services.forEach { (serviceName, displayName) ->
+        var defaultTestConfig = testConfiguration(defaultParallelism, defaultStartHour)
+        var testConfig = serviceTestConfigurationOverrides.getOrDefault(serviceName, defaultTestConfig)
+        var runNightly = runNightly.getOrDefault(environment, false)
+
+        var service = serviceDetails(serviceName, displayName, environment)
+        var buildConfig = service.buildConfiguration(runNightly, testConfig.startHour, testConfig.parallelism)
+        list.add(buildConfig)
+    }
+
+    return list
 }
 
 class testConfiguration(parallelism: Int, startHour: Int) {

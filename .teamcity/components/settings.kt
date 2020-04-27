@@ -1,5 +1,3 @@
-import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
-
 // specifies the default hour (UTC) at which tests should be triggered, if enabled
 var defaultStartHour = 4
 
