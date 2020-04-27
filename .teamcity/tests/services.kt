@@ -10,7 +10,7 @@ class ParallelismTest {
     fun servicesDefinedForCustomParallelism() {
         for (item in customParallelism) {
             val serviceExists = Service(item.key).exists(services)
-            assertTrue("Service %s does not exist in the getServices list - run `make generate`".format(item.key), serviceExists)
+            assertTrue("Service %s does not exist in the services list - run `make generate`".format(item.key), serviceExists)
         }
     }
 }
