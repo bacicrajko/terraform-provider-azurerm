@@ -5,14 +5,14 @@ fun AzureRM(environment: String) : Project {
     return Project{
         vcsRoot(providerRepository)
 
-        var buildConfigs = buildConfigurationsForServices(services, environment)
+        var buildConfigs = buildConfigurationsForServices(services, "azurerm", environment)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForServices(services: Map<String, String>, environment: String): List<BuildType> {
+fun buildConfigurationsForServices(services: Map<String, String>, providerName : String, environment: String): List<BuildType> {
     var list = ArrayList<BuildType>()
 
     services.forEach { (serviceName, displayName) ->
@@ -21,7 +21,7 @@ fun buildConfigurationsForServices(services: Map<String, String>, environment: S
         var runNightly = runNightly.getOrDefault(environment, false)
 
         var service = serviceDetails(serviceName, displayName, environment)
-        var buildConfig = service.buildConfiguration(runNightly, testConfig.startHour, testConfig.parallelism)
+        var buildConfig = service.buildConfiguration(providerName, runNightly, testConfig.startHour, testConfig.parallelism)
         list.add(buildConfig)
     }
 

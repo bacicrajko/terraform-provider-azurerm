@@ -5,10 +5,10 @@ class serviceDetails(name: String, displayName: String, environment: String) {
     val displayName = displayName
     val environment = environment
 
-    fun buildConfiguration(nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int) : BuildType {
+    fun buildConfiguration(providerName : String, nightlyTestsEnabled: Boolean, startHour: Int, parallelism: Int) : BuildType {
         return BuildType {
             // TC needs a consistent ID for dynamically generated packages
-            id(uniqueID())
+            id(uniqueID(providerName))
 
             name = "%s - Acceptance Tests".format(displayName)
 
@@ -19,7 +19,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
 
             steps {
                 ConfigureGoEnv()
-                RunAcceptanceTests("azurerm", packageName)
+                RunAcceptanceTests(providerName, packageName)
             }
 
             failureConditions {
@@ -43,7 +43,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
         }
     }
 
-    fun uniqueID() : String {
-        return "AZURE_SERVICE_%s_%s".format(environment.toUpperCase(), packageName.toUpperCase())
+    fun uniqueID(provider : String) : String {
+        return "%s_SERVICE_%s_%s".format(provider.toUpperCase(), environment.toUpperCase(), packageName.toUpperCase())
     }
 }

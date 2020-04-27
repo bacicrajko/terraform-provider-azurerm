@@ -6,6 +6,12 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 
 // NOTE: in time this could be pulled out into a separate Kotlin package
 
+fun BuildFeatures.Golang() : BuildFeature {
+    return GolangFeature {
+        testFormat = "json"
+    }
+}
+
 fun BuildSteps.ConfigureGoEnv() : BuildStep {
     return ScriptBuildStep {
         name = "Configure Go Version"
@@ -18,12 +24,6 @@ fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) : 
     return ScriptBuildStep {
         name = "Run Tests"
         scriptContent = "go test -v $servicePath -timeout=%TIMEOUT% -test.parallel=%PARALLELISM% -run=%TEST_PREFIX% -json"
-    }
-}
-
-fun BuildFeatures.Golang() : BuildFeature {
-    return GolangFeature {
-        testFormat = "json"
     }
 }
 
