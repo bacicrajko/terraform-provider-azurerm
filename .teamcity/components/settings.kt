@@ -16,6 +16,10 @@ var runNightly = mapOf(
 
 // specifies a list of services which should be run with a custom test configuration
 var serviceTestConfigurationOverrides = mapOf(
+        // The AKS API has a low rate limit
         "containers" to testConfiguration(5, 5),
-        "compute" to testConfiguration(5, 4)
+        "compute" to testConfiguration(5, 4),
+
+        // Data Lake has a low quota
+        "datalake" to testConfiguration(2, 5)
 )
