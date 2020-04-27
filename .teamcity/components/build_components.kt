@@ -1,21 +1,19 @@
-import jetbrains.buildServer.configs.kotlin.v2019_2.BuildFeature
-import jetbrains.buildServer.configs.kotlin.v2019_2.BuildStep
-import jetbrains.buildServer.configs.kotlin.v2019_2.ParameterDisplay
-import jetbrains.buildServer.configs.kotlin.v2019_2.ParametrizedWithType
+import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.GolangFeature
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.ScriptBuildStep
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.ScheduleTrigger
+import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 
 // NOTE: in time this could be pulled out into a separate Kotlin package
 
-fun buildStepGoEnv() : BuildStep {
+fun BuildSteps.ConfigureGoEnv() : BuildStep {
     return ScriptBuildStep {
         name = "Configure Go Version"
         scriptContent = "goenv install -s \$(goenv local) && goenv rehash"
     }
 }
 
-fun buildStepRunAcceptanceTests(providerName : String, packageName: String) : BuildStep {
+fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) : BuildStep {
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
     return ScriptBuildStep {
         name = "Run Tests"
@@ -23,10 +21,16 @@ fun buildStepRunAcceptanceTests(providerName : String, packageName: String) : Bu
     }
 }
 
-fun buildFeatureGolang() : BuildFeature {
+fun BuildFeatures.Golang() : BuildFeature {
     return GolangFeature {
         testFormat = "json"
     }
+}
+
+fun ParametrizedWithType.TerraformAcceptanceTestParameters(parallelism : Int, prefix : String, timeout: String) {
+    text("PARALLELISM", "%d".format(parallelism))
+    text("TEST_PREFIX", prefix)
+    text("TIMEOUT", timeout)
 }
 
 fun ParametrizedWithType.ReadOnlySettings() {
@@ -45,8 +49,8 @@ fun ParametrizedWithType.hiddenVariable(name: String, value: String, description
     text(name, value, "", description, ParameterDisplay.HIDDEN)
 }
 
-fun RunNightly(enabled: Boolean, startHour: Int) : ScheduleTrigger {
-    return ScheduleTrigger {
+fun Triggers.RunNightly(enabled: Boolean, startHour: Int) : ScheduleTrigger {
+    return schedule {
         enabled
         branchFilter = "+:refs/heads/master"
 
