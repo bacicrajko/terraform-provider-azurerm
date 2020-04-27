@@ -18,8 +18,8 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             steps {
-                step(ConfigureGoEnv())
-                step(RunAcceptanceTests(providerName, packageName))
+                ConfigureGoEnv()
+                RunAcceptanceTests(providerName, packageName)
             }
 
             failureConditions {
@@ -27,7 +27,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             features {
-                feature(Golang())
+                Golang()
             }
 
             params {
