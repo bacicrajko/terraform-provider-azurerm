@@ -4,6 +4,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.ParameterDisplay
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.golang
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
+import org.w3c.dom.Text
 
 class serviceDetails(name: String, displayName: String, environment: String) {
     val packageName = name
@@ -46,13 +47,17 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             params {
+                var hiddenVariable = fun(name : String, value: String, description : String) {
+                    return text(name, value, "", description, ParameterDisplay.HIDDEN)
+                }
+
                 text("PARALLELISM", "%d".format(parallelism))
                 text("TEST_PREFIX", "TestAcc")
                 text("TIMEOUT", "12h")
 
-                text("env.TF_ACC", "1", "", "", ParameterDisplay.HIDDEN)
-                text("env.TF_SCHEMA_PANIC_ON_ERROR", "1", "", "", ParameterDisplay.HIDDEN)
-                text("teamcity.ui.settings.readOnly", "true", "", "", ParameterDisplay.HIDDEN)
+                hiddenVariable("env.TC_ACC", "1", "Set to a value to run the Acceptance Tests")
+                hiddenVariable("env.TF_SCHEMA_PANIC_ON_ERROR", "1", "Panic if unknown/unmatched fields are set into the state")
+                hiddenVariable("teamcity.ui.settings.readOnly", "true", "Requires build configurations be edited via Kotlin")
             }
 
             triggers {
