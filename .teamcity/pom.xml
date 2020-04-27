@@ -33,7 +33,6 @@
     <testSourceDirectory>tests</testSourceDirectory>
     <sourceDirectory>components</sourceDirectory>
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -83,6 +82,9 @@
         <configuration>
           <format>kotlin</format>
           <dstDir>target/generated-configs</dstDir>
+          <contextParameters>
+            <environment>public</environment>
+          </contextParameters>
         </configuration>
       </plugin>
     </plugins>

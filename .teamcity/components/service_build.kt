@@ -1,67 +1,73 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.golang
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 
-class testConfiguration(parallelism: Int, startHour: Int) {
-    var parallelism = parallelism
-    var startHour = startHour
-}
+class serviceDetails(name: String, displayName: String, environment: String) {
+    val packageName = name
+    val displayName = displayName
+    val environment = environment
 
-fun buildConfigurationForService(packageName: String, displayName : String, service: testConfiguration, azureEnv : String): BuildType {
-    return BuildType {
-        // TC needs a consistent ID for dynamically generated packages
-        // luckily Golang packages are valid, so we're good to reuse that
-        id("AZURE_SERVICE_%s_%s".format(azureEnv.toUpperCase(), packageName.toUpperCase()))
-        name = "Service - %s".format(displayName)
+    fun buildConfiguration(runNightly: Boolean, startHour: Int, parallelism: Int) : BuildType {
+        return BuildType {
+            // TC needs a consistent ID for dynamically generated packages
+            id(uniqueID())
 
-        vcs {
-            root(providerRepository)
-            cleanCheckout = true
-        }
+            name = "%s - Acceptance Tests".format(displayName)
 
-        steps {
-            script {
-                name = "Configure Go Version"
-                scriptContent = "goenv install -s \$(goenv local) && goenv rehash"
+            vcs {
+                root(providerRepository)
+                cleanCheckout = true
             }
 
-            var servicePath = "./azurerm/internal/services/%s/...".format(packageName)
-            script {
-                name = "Run Tests"
-                scriptContent = "go test -v $servicePath -timeout=%TIMEOUT% -test.parallel=%PARALLELISM% -run=%TEST_PREFIX% -json"
+            steps {
+                script {
+                    name = "Configure Go Version"
+                    scriptContent = "goenv install -s \$(goenv local) && goenv rehash"
+                }
+
+                var servicePath = "./azurerm/internal/services/%s/...".format(packageName)
+                script {
+                    name = "Run Tests"
+                    scriptContent = "go test -v $servicePath -timeout=%TIMEOUT% -test.parallel=%PARALLELISM% -run=%TEST_PREFIX% -json"
+                }
             }
-        }
 
-        failureConditions {
-            errorMessage = true
-        }
-
-        features {
-            golang {
-                testFormat = "json"
+            failureConditions {
+                errorMessage = true
             }
-        }
 
-        params {
-            text("PARALLELISM", "%d".format(service.parallelism))
-            text("TEST_PREFIX", "TestAcc")
-            text("TIMEOUT", "12h")
-            text("env.TF_ACC", "1")
-            text("env.TF_SCHEMA_PANIC_ON_ERROR", "1")
-        }
+            features {
+                golang {
+                    testFormat = "json"
+                }
+            }
 
-        triggers {
-            schedule {
-                enabled = false
-                type = "schedulingTrigger"
-                branchFilter = "+:refs/heads/master"
+            params {
+                text("PARALLELISM", "%d".format(parallelism))
+                text("TEST_PREFIX", "TestAcc")
+                text("TIMEOUT", "12h")
+                text("env.TF_ACC", "1")
+                text("env.TF_SCHEMA_PANIC_ON_ERROR", "1")
+            }
 
-                schedulingPolicy = daily {
-                    hour = service.startHour
-                    timezone = "SERVER"
+            triggers {
+                schedule {
+                    enabled = runNightly
+                    type = "schedulingTrigger"
+                    branchFilter = "+:refs/heads/master"
+
+                    schedulingPolicy = daily {
+                        hour = startHour
+                        timezone = "SERVER"
+                    }
                 }
             }
         }
+    }
+
+    fun uniqueID() : String {
+        return "AZURE_SERVICE_%s_%s".format(environment.toUpperCase(), packageName.toUpperCase())
     }
 }

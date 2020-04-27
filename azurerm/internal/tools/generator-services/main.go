@@ -40,7 +40,7 @@ type generator interface {
 	run(outputFileName string) error
 }
 
-type teamCityServicesListGenerator struct {}
+type teamCityServicesListGenerator struct{}
 
 func (teamCityServicesListGenerator) outputPath(rootDirectory string) string {
 	return fmt.Sprintf("%s/.teamcity/components/generated/services.kt", rootDirectory)
@@ -56,7 +56,7 @@ var services = mapOf(
 	for _, service := range provider.SupportedServices() {
 		info := reflect.TypeOf(service)
 		packageSegments := strings.Split(info.PkgPath(), "/")
-		packageName := packageSegments[len(packageSegments) - 1]
+		packageName := packageSegments[len(packageSegments)-1]
 		item := fmt.Sprintf("        %q to %q", packageName, service.Name())
 		items = append(items, item)
 	}
@@ -65,7 +65,7 @@ var services = mapOf(
 	return writeToFile(outputFileName, formatted)
 }
 
-type websiteCategoriesGenerator struct {}
+type websiteCategoriesGenerator struct{}
 
 func (websiteCategoriesGenerator) outputPath(rootDirectory string) string {
 	return fmt.Sprintf("%s/website/allowed-subcategories", rootDirectory)
