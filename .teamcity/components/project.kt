@@ -1,19 +1,20 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 
-fun AzureRM(environment: String) : Project {
+fun AzureRM(environment: String, configuration : ClientConfiguration) : Project {
     return Project{
         vcsRoot(providerRepository)
 
-        var buildConfigs = buildConfigurationsForServices(services, "azurerm", environment)
+        var buildConfigs = buildConfigurationsForServices(services, "azurerm", environment, configuration)
         buildConfigs.forEach { buildConfiguration ->
             buildType(buildConfiguration)
         }
     }
 }
 
-fun buildConfigurationsForServices(services: Map<String, String>, providerName : String, environment: String): List<BuildType> {
+fun buildConfigurationsForServices(services: Map<String, String>, providerName : String, environment: String, config : ClientConfiguration): List<BuildType> {
     var list = ArrayList<BuildType>()
+    var locationsForEnv = locations.get(environment)!!
 
     services.forEach { (serviceName, displayName) ->
         var defaultTestConfig = testConfiguration(defaultParallelism, defaultStartHour)
@@ -22,6 +23,9 @@ fun buildConfigurationsForServices(services: Map<String, String>, providerName :
 
         var service = serviceDetails(serviceName, displayName, environment)
         var buildConfig = service.buildConfiguration(providerName, runNightly, testConfig.startHour, testConfig.parallelism)
+
+        buildConfig.params.ConfigureAzureSpecificTestParameters(environment, config, locationsForEnv)
+
         list.add(buildConfig)
     }
 

@@ -7,7 +7,7 @@ import org.junit.Test
 class ConfigurationTests {
     @Test
     fun buildShouldFailOnError() {
-        val project = AzureRM("public")
+        val project = AzureRM("public", TestConfiguration())
         project.buildTypes.forEach { bt ->
             assertTrue("Build '${bt.id}' should fail on errors!", bt.failureConditions.errorMessage)
         }
@@ -31,7 +31,7 @@ class ConfigurationTests {
 
     @Test
     fun buildShouldHaveTrigger() {
-        val project = AzureRM("public")
+        val project = AzureRM("public", TestConfiguration())
         var exists = false
         project.buildTypes.forEach{ bt ->
             bt.triggers.items.forEach { t ->
