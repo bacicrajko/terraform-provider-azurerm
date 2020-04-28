@@ -1,5 +1,5 @@
 // specifies the default hour (UTC) at which tests should be triggered, if enabled
-var defaultStartHour = 4
+var defaultStartHour = 0
 
 // specifies the default level of parallelism per-service-package
 var defaultParallelism = 10
@@ -17,13 +17,13 @@ var runNightly = mapOf(
 // specifies a list of services which should be run with a custom test configuration
 var serviceTestConfigurationOverrides = mapOf(
         // The AKS API has a low rate limit
-        "containers" to testConfiguration(5, 5),
-        "compute" to testConfiguration(5, 4),
+        "containers" to testConfiguration(5, defaultStartHour),
+        "compute" to testConfiguration(5, defaultStartHour),
 
         // Data Lake has a low quota
-        "datalake" to testConfiguration(2, 5),
+        "datalake" to testConfiguration(2, defaultStartHour),
 
         // SignalR only allows provisioning one "Free" instance at a time,
         // which is used in multiple tests
-        "signalr" to testConfiguration(1, 4)
+        "signalr" to testConfiguration(1, defaultStartHour)
 )
