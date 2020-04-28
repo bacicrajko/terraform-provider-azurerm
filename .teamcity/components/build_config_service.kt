@@ -23,7 +23,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
 
             steps {
                 ConfigureGoEnv()
-                if useTeamCityGoTest {
+                if (useTeamCityGoTest) {
                     RunAcceptanceTests(providerName, packageName)
                 } else {
                     RunAcceptanceTestsUsingOldMethod(providerName, packageName)
@@ -35,7 +35,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             features {
-                if useTeamCityGoTest {
+                if (useTeamCityGoTest) {
                     Golang()
                 }
             }
