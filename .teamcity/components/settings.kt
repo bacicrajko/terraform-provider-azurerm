@@ -21,5 +21,9 @@ var serviceTestConfigurationOverrides = mapOf(
         "compute" to testConfiguration(5, 4),
 
         // Data Lake has a low quota
-        "datalake" to testConfiguration(2, 5)
+        "datalake" to testConfiguration(2, 5),
+
+        // SignalR only allows provisioning one "Free" instance at a time,
+        // which is used in multiple tests
+        "signalr" to testConfiguration(1, 4)
 )
