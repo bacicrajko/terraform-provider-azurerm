@@ -6,7 +6,7 @@ var defaultParallelism = 10
 
 var locations = mapOf(
         "public" to LocationConfiguration("westeurope", "eastus2", "francecentral", false),
-        "germany" to LocationConfiguration("westeurope", "eastus2", "francecentral", false)
+        "germany" to LocationConfiguration("germanynortheast", "germanycentral", "", false)
 )
 
 // specifies the list of Azure Environments where tests should be run nightly
