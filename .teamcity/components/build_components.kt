@@ -29,7 +29,7 @@ fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) {
 fun BuildSteps.RunAcceptanceTestsUsingOldMethod(providerName : String, packageName: String) {
     step(ScriptBuildStep {
         name = "Install tombuildsstuff/teamcity-go-test-json"
-        scriptContent = "go install github.com/tombuildsstuff/teamcity-go-test-json"
+        scriptContent = "GO111MODULE=off go install github.com/tombuildsstuff/teamcity-go-test-json"
     })
 
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
