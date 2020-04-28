@@ -19,7 +19,8 @@ class serviceDetails(name: String, displayName: String, environment: String) {
 
             steps {
                 ConfigureGoEnv()
-                RunAcceptanceTests(providerName, packageName)
+                //RunAcceptanceTests(providerName, packageName)
+                RunAcceptanceTestsUsingOldMethod(providerName, packageName)
             }
 
             failureConditions {

@@ -22,7 +22,20 @@ fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) {
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
     step(ScriptBuildStep {
         name = "Run Tests"
-        scriptContent = "go test -v $servicePath -timeout=%TIMEOUT% -test.parallel=%PARALLELISM% -run=%TEST_PREFIX% -json"
+        scriptContent = "go test -v \"$servicePath\" -timeout=\"%TIMEOUT%\" -test.parallel=\"%PARALLELISM%\" -run=\"%TEST_PREFIX%\" -json"
+    })
+}
+
+fun BuildSteps.RunAcceptanceTestsUsingOldMethod(providerName : String, packageName: String) {
+    step(ScriptBuildStep {
+        name = "Install tombuildsstuff/teamcity-go-test-json"
+        scriptContent = "go install github.com/tombuildsstuff/teamcity-go-test-json"
+    })
+
+    var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
+    step(ScriptBuildStep {
+        name = "Run Tests"
+        scriptContent = "teamcity-go-test-json -scope \"$servicePath\" -prefix \"%TEST_PATTERN%\" -count=1 -parallelism=%ACCTEST_PARALLELISM% -timeout %TIMEOUT%"
     })
 }
 
