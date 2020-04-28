@@ -1,5 +1,9 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 
+// unfortunately TeamCity's Go Test Json parser appears to be broken
+// as such for the moment let's use the old method with a feature-flag
+const val useTeamCityGoTest = false
+
 class serviceDetails(name: String, displayName: String, environment: String) {
     val packageName = name
     val displayName = displayName
@@ -19,8 +23,11 @@ class serviceDetails(name: String, displayName: String, environment: String) {
 
             steps {
                 ConfigureGoEnv()
-                //RunAcceptanceTests(providerName, packageName)
-                RunAcceptanceTestsUsingOldMethod(providerName, packageName)
+                if useTeamCityGoTest {
+                    RunAcceptanceTests(providerName, packageName)
+                } else {
+                    RunAcceptanceTestsUsingOldMethod(providerName, packageName)
+                }
             }
 
             failureConditions {
@@ -28,7 +35,9 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             features {
-                Golang()
+                if useTeamCityGoTest {
+                    Golang()
+                }
             }
 
             params {
