@@ -35,7 +35,7 @@ fun BuildSteps.RunAcceptanceTestsUsingOldMethod(providerName : String, packageNa
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
     step(ScriptBuildStep {
         name = "Run Tests"
-        scriptContent = "teamcity-go-test-json -scope \"$servicePath\" -prefix \"%TEST_PATTERN%\" -count=1 -parallelism=%ACCTEST_PARALLELISM% -timeout %TIMEOUT%"
+        scriptContent = "teamcity-go-test-json -scope \"$servicePath\" -prefix \"%TEST_PREFIX%\" -count=1 -parallelism=%PARALLELISM% -timeout %TIMEOUT%"
     })
 }
 
