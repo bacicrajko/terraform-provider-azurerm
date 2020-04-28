@@ -16,6 +16,9 @@ var runNightly = mapOf(
 
 // specifies a list of services which should be run with a custom test configuration
 var serviceTestConfigurationOverrides = mapOf(
+        // The API Management tests take ~45m each
+        "apimanagement" to testConfiguration(10, defaultStartHour),
+
         // The AKS API has a low rate limit
         "containers" to testConfiguration(5, defaultStartHour),
         "compute" to testConfiguration(5, defaultStartHour),
