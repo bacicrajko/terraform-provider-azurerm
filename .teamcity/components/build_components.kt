@@ -22,7 +22,7 @@ fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) {
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
     step(ScriptBuildStep {
         name = "Run Tests"
-        scriptContent = "go test -v \"$servicePath\" -timeout=\"%TIMEOUT%\" -test.parallel=\"%PARALLELISM%\" -run=\"%TEST_PREFIX%\" -json"
+        scriptContent = "go test -v \"$servicePath\" -timeout=\"%TIMEOUT%h\" -test.parallel=\"%PARALLELISM%\" -run=\"%TEST_PREFIX%\" -json"
     })
 }
 

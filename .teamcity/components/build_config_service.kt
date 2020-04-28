@@ -32,7 +32,7 @@ class serviceDetails(name: String, displayName: String, environment: String) {
             }
 
             params {
-                TerraformAcceptanceTestParameters(parallelism, "TestAcc", "12h")
+                TerraformAcceptanceTestParameters(parallelism, "TestAcc", "12")
                 TerraformAcceptanceTestsFlag()
                 TerraformShouldPanicForSchemaErrors()
                 ReadOnlySettings()
