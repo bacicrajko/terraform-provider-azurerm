@@ -29,13 +29,13 @@ fun BuildSteps.RunAcceptanceTests(providerName : String, packageName: String) {
 fun BuildSteps.RunAcceptanceTestsUsingOldMethod(providerName : String, packageName: String) {
     step(ScriptBuildStep {
         name = "Install tombuildsstuff/teamcity-go-test-json"
-        scriptContent = "GO111MODULE=off go install github.com/tombuildsstuff/teamcity-go-test-json"
+        scriptContent = "wget https://github.com/tombuildsstuff/teamcity-go-test-json/releases/download/v0.1.0/teamcity-go-test-json_linux_amd64"
     })
 
     var servicePath = "./%s/internal/services/%s/...".format(providerName, packageName)
     step(ScriptBuildStep {
         name = "Run Tests"
-        scriptContent = "teamcity-go-test-json -scope \"$servicePath\" -prefix \"%TEST_PREFIX%\" -count=1 -parallelism=%PARALLELISM% -timeout %TIMEOUT%"
+        scriptContent = "./teamcity-go-test-json_linux_amd64 -scope \"$servicePath\" -prefix \"%TEST_PREFIX%\" -count=1 -parallelism=%PARALLELISM% -timeout %TIMEOUT%"
     })
 }
 
